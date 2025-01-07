@@ -21,12 +21,14 @@ export const DetailsForm = memo(({ saveData }: Props) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div>
-        <label>Communication Type *</label>
-        <select {...register('type')}>
-          <option value="">Select...</option>
-          <option value="Email">Email</option>
-          <option value="Push">Push Notification</option>
-        </select>
+      <label>
+          <input type="checkbox" {...register('type')} value="Email" />
+          Email
+        </label>
+        <label>
+          <input type="checkbox" {...register('type')} value="Push" />
+          Push Notification
+        </label>
         {errors.type && <p style={{color: 'red'}}>{errors.type.message}</p>}
       </div>
       <div>

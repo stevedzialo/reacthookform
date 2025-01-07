@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import {DetailsForm} from './forms/DetailsForm';
-import {ScheduleForm} from './forms/ScheduleForm';
-import { TargetForm } from './forms/TargetForm';
+import React, { useState } from "react";
+import { DetailsForm } from "./forms/DetailsForm";
+import { ScheduleForm } from "./forms/ScheduleForm";
+import { TargetForm } from "./forms/TargetForm";
 
 export interface FormData {
   details: DetailsFormProps;
@@ -10,7 +10,7 @@ export interface FormData {
 }
 
 export interface DetailsFormProps {
-  type?: string;
+  type?: NonNullable<"Email" | "Push" | undefined>;
   title?: string;
   body?: string;
 }
@@ -39,6 +39,7 @@ export default function Home() {
     />,
     <TargetForm
       saveData={(data) => setFormData((prev) => ({ ...prev, target: data }))}
+      selectedTypes={formData.details.type}
     />,
   ];
 
@@ -51,14 +52,14 @@ export default function Home() {
   };
 
   const handleSubmit = () => {
-    console.log('Final Form Data:', formData);
+    console.log("Final Form Data:", formData);
   };
 
   return (
     <div>
       {forms[currentTab]}
       <button type="button" onClick={handleNext}>
-        {currentTab < forms.length - 1 ? 'Next' : 'Submit'}
+        {currentTab < forms.length - 1 ? "Next" : "Submit"}
       </button>
       <br />
       <pre>
@@ -66,4 +67,4 @@ export default function Home() {
       </pre>
     </div>
   );
-};
+}
