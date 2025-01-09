@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { EditorState} from 'draft-js';
 import { DetailsForm } from "./forms/DetailsForm";
 import { ScheduleForm } from "./forms/ScheduleForm";
 import { TargetForm } from "./forms/TargetForm";
@@ -12,7 +13,7 @@ export interface FormData {
 export interface DetailsFormProps {
   type?: NonNullable<"Email" | "Push" | undefined>;
   title?: string;
-  body?: string;
+  body?: EditorState;
 }
 export interface ScheduleFormProps {
   date?: string;
@@ -23,7 +24,9 @@ export interface TargetFormProps {
 }
 export default function Home() {
   const [formData, setFormData] = useState<FormData>({
-    details: {},
+    details: {
+      body: EditorState.createEmpty()
+    },
     schedule: {},
     target: {},
   });

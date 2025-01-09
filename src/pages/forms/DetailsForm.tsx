@@ -1,20 +1,41 @@
-import React, {memo} from 'react';
-import { useForm } from 'react-hook-form';
-import { DetailsFormProps } from '..';
 import { yupResolver } from '@hookform/resolvers/yup';
+import {Editor, EditorState, convertToRaw } from 'draft-js';
+import { memo, useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { DetailsFormProps } from '..';
 import { detailsFormSchema } from './schemas/detailsFormSchema';
+import React from 'react';
+import { RTEditor } from '../components/RTEditor';
 
 interface Props {
   saveData: (data: DetailsFormProps) => void;
 }
 
+// eslint-disable-next-line react/display-name
 export const DetailsForm = memo(({ saveData }: Props) => {
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    resolver: yupResolver(detailsFormSchema),
+  const { register, handleSubmit, formState: { errors }, control } = useForm({
+    defaultValues: {
+      type: [],
+      title: '',
+      body: EditorState.createEmpty()
+    },
+    resolver: yupResolver(detailsFormSchema)
   });
 
   const onSubmit = (data: DetailsFormProps) => {
-    saveData(data);
+    const rawContent = convertToRaw(data.body.getCurrentContent());
+    
+    const bodyText = rawContent.blocks
+      .map(block => block.text)
+      .filter(text => text.length > 0)
+      .join('\n');
+
+    const finalData = {
+      ...data,
+      body: bodyText,
+    };
+
+    saveData(finalData);
   };
   console.log('DetailsForm')
 
@@ -38,9 +59,7 @@ export const DetailsForm = memo(({ saveData }: Props) => {
       </div>
 
       <div>
-        <label>Body</label>
-        <textarea {...register('body', { required: 'Body is required' })}></textarea>
-        {errors.body && <p style={{color: 'red'}}>{errors.body.message}</p>}
+        <RTEditor control={control}/>   
       </div>
 
       <button type="submit">Save & Continue</button>
